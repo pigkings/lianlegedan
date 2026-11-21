@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>炼了个丹</title>
+<link rel="stylesheet" href="style.css?v=42">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="avatar-box">
+    <div class="avatar">
+      <svg viewBox="0 0 48 48" class="avatar-svg" aria-hidden="true">
+        <circle cx="24" cy="24" r="21" fill="#3a332b" stroke="#d4af37" stroke-width="2"/>
+        <circle cx="24" cy="24" r="16" fill="none" stroke="#8a6d1f" stroke-width="1" opacity=".7"/>
+        <text x="24" y="31" text-anchor="middle" class="avatar-char">丹</text>
+      </svg>
+    </div>
+    <div class="avatar-name">炼丹道人<small>一级丹师</small></div>
+  </div>
+  <div class="top-stats">
+    <div class="stat" title="灵历：随操作耗时推进（采药 1 时辰、开炉耗时更多），跨日结算宗门俸禄">
+      <svg class="stat-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="#e3c46a"/><path d="M12,2 V5 M12,19 V22 M2,12 H5 M19,12 H22" stroke="#b8912f" stroke-width="2"/><path d="M3,18 Q7,14 11,18 Q15,22 20,16" stroke="#8a9a78" fill="none" stroke-width="2"/></svg>灵历 <b id="stat-time">灵历1年1月1日1时</b></div>
+    <div class="stat" title="灵石：通用货币">
+      <svg class="stat-ico" viewBox="0 0 24 24"><path d="M12,2 L19,9 L12,22 L5,9 Z" fill="#d4c07a" stroke="#8a6d1f" stroke-width="1.5"/><path d="M12,2 L19,9 H5 Z" fill="#f0e2b0"/></svg>灵石 <b id="stat-lingshi">0</b></div>
+    <div class="stat" title="丹宠等级">
+      <svg class="stat-ico" viewBox="0 0 24 24"><circle cx="8" cy="7" r="2.2" fill="#c98a4a"/><circle cx="13.4" cy="5.8" r="2.2" fill="#c98a4a"/><circle cx="18" cy="9" r="2" fill="#c98a4a"/><path d="M6,17 Q12,10 19,15 Q15,21 8,19 Z" fill="#e8873c" stroke="#8a5a2a" stroke-width="1.2"/></svg>丹宠 <b id="stat-pet">Lv.1</b></div>
+    <div class="stat" title="已炼丹总数">
+      <svg class="stat-ico" viewBox="0 0 24 24"><path d="M10,3 Q12,1 14,3 L13.4,7 Q18,8 18,14 Q18,21 12,21 Q6,21 6,14 Q6,8 10.6,7 Z" fill="#a63a2b" stroke="#6e2416" stroke-width="1.2"/><ellipse cx="10" cy="13" rx="3" ry="2" fill="#f5e6d3" opacity=".5"/></svg>炼丹 <b id="stat-count">0</b></div>
+    <div class="stat" title="宗门信任：完不成每日委托将被扣心，三心尽则执法堂斩立决；完成委托可戴罪立功恢复">
+      <svg class="stat-ico" viewBox="0 0 24 24"><path d="M12,20 C5,14 2,10 2,6.5 C2,3.5 4.5,2 7,2 C9,2 11,3.5 12,5.5 C13,3.5 15,2 17,2 C19.5,2 22,3.5 22,6.5 C22,10 19,14 12,20 Z" fill="#a63a2b"/></svg>信任 <b id="stat-hearts"></b></div>
+    <button class="ghost-btn" id="btn-settings"><svg class="ghost-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12,2 V5.5 M12,18.5 V22 M2,12 H5.5 M18.5,12 H22 M4.9,4.9 L7.4,7.4 M16.6,16.6 L19.1,19.1 M19.1,4.9 L16.6,7.4 M7.4,16.6 L4.9,19.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>设置</button>
+  </div>
+</header>
+
+<main class="scene" id="scene">
+
+  <!-- 仙侠场景：远山/金日/云雾/仙鹤/翠竹（SVG 底层） -->
+  <svg class="scene-bg" viewBox="0 0 1148 640" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="mtnFar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#cdc1a8" stop-opacity=".5"/>
+        <stop offset="1" stop-color="#cdc1a8" stop-opacity=".05"/>
+      </linearGradient>
+      <linearGradient id="mtnMid" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#bdb094" stop-opacity=".45"/>
+        <stop offset="1" stop-color="#bdb094" stop-opacity=".05"/>
+      </linearGradient>
+      <radialGradient id="sunGlow">
+        <stop offset="0" stop-color="#e8c96a" stop-opacity=".5"/>
+        <stop offset=".55" stop-color="#e8c96a" stop-opacity=".16"/>
+        <stop offset="1" stop-color="#e8c96a" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="pg_q1" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#d8d2c4"/><stop offset=".55" stop-color="#a89f8d"/><stop offset="1" stop-color="#6e675c"/></radialGradient>
+      <radialGradient id="pg_q2" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#b8e0a0"/><stop offset=".55" stop-color="#5a9a4a"/><stop offset="1" stop-color="#2e5a38"/></radialGradient>
+      <radialGradient id="pg_q3" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#f0dc9a"/><stop offset=".55" stop-color="#d4af37"/><stop offset="1" stop-color="#8a6a1f"/></radialGradient>
+      <radialGradient id="pg_q4" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#f0a578"/><stop offset=".55" stop-color="#c04a2b"/><stop offset="1" stop-color="#6e2416"/></radialGradient>
+      <radialGradient id="pg_q5" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#c9a8f0"/><stop offset=".55" stop-color="#7a4ad0"/><stop offset="1" stop-color="#3f2378"/></radialGradient>
+      <radialGradient id="pg_t2" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#c0e890"/><stop offset=".55" stop-color="#6aa04a"/><stop offset="1" stop-color="#2e6a30"/></radialGradient>
+      <radialGradient id="pg_t3" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#e0c0f8"/><stop offset=".55" stop-color="#9a6ad0"/><stop offset="1" stop-color="#4a2e8a"/></radialGradient>
+    </defs>
+    <g class="sun">
+      <circle cx="940" cy="96" r="72" fill="url(#sunGlow)">
+        <animate attributeName="opacity" values="1;.55;1" dur="6s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="940" cy="96" r="32" fill="#e3c46a" opacity=".38"/>
+    </g>
+    <path class="mtn far" d="M0,470 Q90,380 200,440 Q300,380 420,450 Q520,390 640,455 Q760,395 880,460 Q1000,410 1148,470 L1148,640 L0,640 Z" fill="url(#mtnFar)"/>
+    <path class="mtn mid" d="M0,540 Q140,470 280,525 Q420,480 560,535 Q700,490 840,545 Q980,505 1148,550 L1148,640 L0,640 Z" fill="url(#mtnMid)"/>
+    <g class="pavilion" opacity=".55" transform="translate(880,452)">
+      <path d="M-16,-12 Q0,-26 16,-12" stroke="#6e675c" stroke-width="2.5" fill="none"/>
+      <path d="M-18,-11 H18" stroke="#6e675c" stroke-width="2"/>
+      <path d="M-10,-11 V0 M10,-11 V0" stroke="#6e675c" stroke-width="1.5"/>
+      <path d="M-14,0 H14" stroke="#6e675c" stroke-width="2"/>
+    </g>
+    <g class="mist m1" fill="#f7f1e0" opacity=".55">
+      <animateTransform attributeName="transform" type="translate" values="-34,0; 34,0; -34,0" dur="46s" repeatCount="indefinite"/>
+      <ellipse cx="180" cy="336" rx="150" ry="15"/>
+      <ellipse cx="310" cy="322" rx="90" ry="11"/>
+    </g>
+    <g class="mist m2" fill="#f7f1e0" opacity=".45">
+      <animateTransform attributeName="transform" type="translate" values="30,0; -36,0; 30,0" dur="58s" repeatCount="indefinite"/>
+      <ellipse cx="760" cy="292" rx="170" ry="13"/>
+      <ellipse cx="905" cy="280" rx="100" ry="10"/>
+    </g>
+    <g class="mist m3" fill="#f7f1e0" opacity=".5">
+      <animateTransform attributeName="transform" type="translate" values="-26,0; 26,0; -26,0" dur="70s" repeatCount="indefinite"/>
+      <ellipse cx="470" cy="506" rx="200" ry="17"/>
+      <ellipse cx="645" cy="492" rx="120" ry="12"/>
+    </g>
+    <g transform="translate(250,196)">
+      <g class="crane crane1">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 10,-9; 0,0" dur="5s" repeatCount="indefinite"/>
+        <path d="M-3,-3 L-17,-12 L-9,-1 Z" fill="#8a8378"/>
+        <ellipse cx="0" cy="0" rx="15" ry="6.5" fill="#fbf7ec" stroke="#8a8378" stroke-width="1.5"/>
+        <path d="M13,-2 Q24,-9 28,-4" fill="none" stroke="#8a8378" stroke-width="1.5"/>
+        <circle cx="29" cy="-5" r="3.2" fill="#fbf7ec" stroke="#8a8378" stroke-width="1.5"/>
+        <path d="M32,-6 L41,-4 L32,-3 Z" fill="#a63a2b"/>
+        <ellipse cx="0" cy="-7" rx="2.4" ry="1.4" fill="#a63a2b"/>
+        <path d="M-5,5 L-8,14 M4,5 L3,14" stroke="#8a8378" stroke-width="1.5"/>
+      </g>
+    </g>
+    <g transform="translate(1010,244) scale(.82)">
+      <g class="crane crane2">
+        <animateTransform attributeName="transform" type="translate" values="0,0; -10,7; 0,0" dur="6.4s" repeatCount="indefinite"/>
+        <g transform="scale(-1,1)">
+          <path d="M-3,-3 L-17,-12 L-9,-1 Z" fill="#8a8378"/>
+          <ellipse cx="0" cy="0" rx="15" ry="6.5" fill="#fbf7ec" stroke="#8a8378" stroke-width="1.5"/>
+          <path d="M13,-2 Q24,-9 28,-4" fill="none" stroke="#8a8378" stroke-width="1.5"/>
+          <circle cx="29" cy="-5" r="3.2" fill="#fbf7ec" stroke="#8a8378" stroke-width="1.5"/>
+          <path d="M32,-6 L41,-4 L32,-3 Z" fill="#a63a2b"/>
+          <ellipse cx="0" cy="-7" rx="2.4" ry="1.4" fill="#a63a2b"/>
+          <path d="M-5,5 L-8,14 M4,5 L3,14" stroke="#8a8378" stroke-width="1.5"/>
+        </g>
+      </g>
+    </g>
+    <g class="bamboo" opacity=".42">
+      <animateTransform attributeName="transform" type="rotate" values="-1.2 1104 0; 1.2 1104 0; -1.2 1104 0" dur="7s" repeatCount="indefinite"/>
+      <path d="M1104,0 Q1092,80 1100,180 Q1104,240 1096,320" stroke="#8a9a78" stroke-width="6" fill="none"/>
+      <path d="M1099,60 Q1074,66 1058,60" stroke="#8a9a78" stroke-width="3.5" fill="none"/>
+      <path d="M1098,120 Q1050,130 1020,118" stroke="#8a9a78" stroke-width="3.5" fill="none"/>
+      <path d="M1098,200 Q1056,214 1030,206" stroke="#8a9a78" stroke-width="3.5" fill="none"/>
+      <path d="M1058,60 Q1040,52 1024,56 Q1042,66 1058,60" fill="#8a9a78"/>
+      <path d="M1020,118 Q998,110 980,114 Q1000,124 1020,118" fill="#8a9a78"/>
+      <path d="M1030,206 Q1004,198 986,204 Q1006,214 1030,206" fill="#8a9a78"/>
+      <path d="M1096,320 Q1068,312 1048,318 Q1072,330 1096,320" fill="#8a9a78"/>
+    </g>
+  </svg>
+
+  <!-- 顶部：炼丹成功率 -->
+  <div class="scene-top">
+    <div class="chance-panel" id="chance-panel" title="炼丹有小概率直接炼出高品级；成功率随丹方、丹宠等级、丹炉品级与幸运值变化">
+      <div class="tier-tabs" id="tier-tabs">
+        <span class="tier-label">丹药：</span>
+        <button class="tier-tab" data-tier="t1">一品</button>
+        <button class="tier-tab" data-tier="t2">二品</button>
+        <button class="tier-tab" data-tier="t3">三品</button>
+      </div>
+      <div class="chance-gauge">
+        <div class="chance-pointer" id="chance-pointer">
+          <span class="chance-val" id="chance-val">--%</span><i class="tri"></i>
+        </div>
+        <div class="chance-bar"></div>
+      </div>
+      <div class="chance-sub" id="chance-sub">幸运 0</div>
+    </div>
+  </div>
+
+  <!-- 左侧：宗门/商店/集市/仓库 竖排 -->
+  <div class="door-group">
+    <button class="door" id="btn-sect"><svg class="door-ico" viewBox="0 0 24 24"><path d="M3,20 V10 M21,20 V10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M2,10 Q12,3 22,10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M4,10 H20" stroke="currentColor" stroke-width="2"/><path d="M6,20 V13 M18,20 V13 M10,20 V13 M14,20 V13" stroke="currentColor" stroke-width="1.5"/></svg>宗门</button>
+    <button class="door" id="btn-shop"><svg class="door-ico" viewBox="0 0 24 24"><path d="M12,3 Q16.6,3 15.8,7.6 L15,10 H9 L8.2,7.6 Q7.4,3 12,3" fill="currentColor" opacity=".9"/><path d="M7,10 H17 L19,21 H5 Z" fill="currentColor" opacity=".75"/><path d="M9,10.4 Q12,13.2 15,10.4" stroke="#f2e8d5" fill="none" stroke-width="1.5"/></svg>商店</button>
+    <button class="door" id="btn-market"><svg class="door-ico" viewBox="0 0 24 24"><path d="M12,2 V6" stroke="currentColor" stroke-width="2"/><path d="M6,6 H18 L17,16 H7 Z" fill="currentColor" opacity=".85"/><path d="M12,16 V20 M9,20 H15" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="11" r="2.4" fill="#f2e8d5" opacity=".8"/></svg>集市</button>
+    <button class="door" id="btn-warehouse"><svg class="door-ico" viewBox="0 0 24 24"><path d="M3,10 L12,3 L21,10 V21 H3 Z" fill="currentColor" opacity=".8"/><path d="M9,21 V13 H15 V21" fill="none" stroke="#f2e8d5" stroke-width="2"/><path d="M3,10 L12,3 L21,10" fill="none" stroke="currentColor" stroke-width="2"/></svg>仓库</button>
+  </div>
+
+  <!-- 中央：丹炉 + 丹宠 -->
+  <div class="furnace-zone">
+    <div class="furnace-top" id="furnace-top" title="点击收取悬浮的丹药"></div>
+    <div class="furnace" id="furnace" title="点击丹炉：空闲时选方投药，炼制中扇火提速">
+      <svg class="furnace-svg" viewBox="0 0 220 240" aria-hidden="true">
+        <defs>
+          <linearGradient id="bronzeG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8a7860"/>
+            <stop offset=".5" stop-color="#57493a"/>
+            <stop offset="1" stop-color="#2e271f"/>
+          </linearGradient>
+          <linearGradient id="flameO" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#d94e1f"/>
+            <stop offset=".55" stop-color="#ff9a3d"/>
+            <stop offset="1" stop-color="#ffd97a"/>
+          </linearGradient>
+          <linearGradient id="flameI" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#ffb347"/>
+            <stop offset="1" stop-color="#fff3c4"/>
+          </linearGradient>
+          <radialGradient id="emberG">
+            <stop offset="0" stop-color="#ffcf6e" stop-opacity=".9"/>
+            <stop offset="1" stop-color="#e25822" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <ellipse class="glowS" cx="110" cy="224" rx="64" ry="16" fill="url(#emberG)" opacity="0"/>
+        <path class="earS" d="M40,66 Q14,58 18,30 Q26,36 34,44 Q42,52 46,62 Z" fill="url(#bronzeG)" stroke="#221d16" stroke-width="2.5"/>
+        <path class="earS" d="M180,66 Q206,58 202,30 Q194,36 186,44 Q178,52 174,62 Z" fill="url(#bronzeG)" stroke="#221d16" stroke-width="2.5"/>
+        <path class="legS" d="M66,182 Q58,208 68,224 Q80,230 86,220 Q78,200 80,184 Z" fill="url(#bronzeG)" stroke="#221d16" stroke-width="2.5"/>
+        <path class="legS" d="M154,182 Q162,208 152,224 Q140,230 134,220 Q142,200 140,184 Z" fill="url(#bronzeG)" stroke="#221d16" stroke-width="2.5"/>
+        <path class="legS" d="M106,188 Q110,210 108,226 Q118,228 120,220 Q116,204 116,188 Z" fill="url(#bronzeG)" stroke="#221d16" stroke-width="2.5"/>
+        <path class="bodyS" d="M46,74 Q36,128 60,164 Q88,192 110,192 Q132,192 160,164 Q184,128 174,74 Z" fill="url(#bronzeG)" stroke="#221d16" stroke-width="3"/>
+        <path d="M62,92 Q55,120 70,150" stroke="#a89878" stroke-width="3" fill="none" opacity=".45" stroke-linecap="round"/>
+        <g class="pattern" stroke="#c9a227" fill="none" stroke-width="1.8" opacity=".85">
+          <path d="M52,100 Q110,116 168,100"/>
+          <path d="M66,106 Q74,112 66,117 Q59,112 66,106 M86,111 Q94,117 86,122 Q79,117 86,111 M106,113 Q114,119 106,124 Q99,119 106,113 M126,113 Q134,119 126,124 Q119,119 126,113 M146,109 Q154,115 146,120 Q139,115 146,109"/>
+        </g>
+        <ellipse cx="110" cy="72" rx="70" ry="15" fill="#4a4238" stroke="#221d16" stroke-width="3"/>
+        <ellipse cx="110" cy="73" rx="56" ry="9" fill="#191510"/>
+        <text x="110" y="166" text-anchor="middle" class="furnace-char">丹</text>
+        <g class="flames" transform="translate(110,232)">
+          <path class="fl fS" d="M-30,4 Q-36,-22 -14,-38 Q-20,-14 -2,-4 Q-6,-20 6,-30 Q4,-12 16,-2 Q28,-10 30,4 Q18,20 0,20 Q-18,20 -30,4 Z" fill="url(#flameO)" opacity="0"/>
+          <path class="fl fM" d="M-18,2 Q-22,-14 -6,-26 Q-10,-8 4,-2 Q14,-8 16,2 Q8,14 -2,14 Q-12,14 -18,2 Z" fill="url(#flameI)" opacity="0"/>
+          <path class="fl fC" d="M-8,0 Q-10,-8 -2,-14 Q-2,-4 4,-2 Q8,-4 8,0 Q4,8 -2,8 Q-6,8 -8,0 Z" fill="#fff3c4" opacity="0"/>
+        </g>
+      </svg>
+      <div class="firepit" id="firepit" title="炉底：备好药材后点击此处挑选木柴点火"></div>
+    </div>
+
+    <div class="refine-panel" id="refine-panel">
+      <div class="refine-progress">
+        <div class="bar"><div class="fill" id="refine-fill"></div></div>
+        <span class="refine-label" id="refine-label">点击丹炉，选方投药</span>
+      </div>
+      <div class="event-box" id="event-box" hidden></div>
+    </div>
+    <div class="toast-bar" id="toast-bar" hidden></div>
+
+    <!-- 丹宠小狸（SVG） -->
+    <div class="pet-zone" id="pet-zone" title="戳一戳小狸">
+      <svg class="fox-svg" viewBox="0 0 140 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="foxG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f5b06a"/>
+            <stop offset="1" stop-color="#e0803a"/>
+          </linearGradient>
+        </defs>
+        <path class="fox-tail" d="M94,84 Q136,78 132,46 Q128,20 104,26 Q124,38 120,56 Q114,74 86,76 Z" fill="url(#foxG)" stroke="#5c3a1e" stroke-width="2.5"/>
+        <path class="fox-tail-tip" d="M116,30 Q128,42 121,56 Q120,44 108,40 Z" fill="#f5e6d3"/>
+        <ellipse class="fox-body" cx="62" cy="88" rx="30" ry="20" fill="url(#foxG)" stroke="#5c3a1e" stroke-width="2.5"/>
+        <ellipse cx="62" cy="95" rx="17" ry="10" fill="#f5e6d3"/>
+        <ellipse cx="44" cy="104" rx="9" ry="5.5" fill="#e0803a" stroke="#5c3a1e" stroke-width="2"/>
+        <ellipse cx="76" cy="104" rx="9" ry="5.5" fill="#e0803a" stroke="#5c3a1e" stroke-width="2"/>
+        <g class="fox-head-g" transform="translate(40,48)">
+          <path class="fox-ear" d="M-17,-16 Q-22,-34 -6,-30 Q-1,-25 -3,-16 Z" fill="url(#foxG)" stroke="#5c3a1e" stroke-width="2.5"/>
+          <path class="fox-ear" d="M15,-16 Q20,-34 4,-30 Q-1,-25 1,-16 Z" fill="url(#foxG)" stroke="#5c3a1e" stroke-width="2.5"/>
+          <path d="M-13,-22 Q-15,-28 -9,-25 Z" fill="#e8a184"/>
+          <path d="M11,-22 Q13,-28 7,-25 Z" fill="#e8a184"/>
+          <circle cx="0" cy="0" r="20" fill="#f0a35e" stroke="#5c3a1e" stroke-width="2.5"/>
+          <path d="M-13,7 Q0,15 13,7 Q0,11 -13,7 Z" fill="#f5e6d3"/>
+          <path class="fox-eye" d="M-11,-4 Q-7,-9 -3,-4" stroke="#3a2c1e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path class="fox-eye" d="M3,-4 Q7,-9 11,-4" stroke="#3a2c1e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="-14" cy="2" rx="4" ry="2.4" fill="#e89070" opacity=".55"/>
+          <ellipse cx="14" cy="2" rx="4" ry="2.4" fill="#e89070" opacity=".55"/>
+          <circle cx="0" cy="4" r="2.4" fill="#3a2c1e"/>
+        </g>
+        <path d="M42,64 Q52,70 60,63" stroke="#a63a2b" stroke-width="2.5" fill="none"/>
+        <circle class="fox-bell" cx="55" cy="70" r="4.6" fill="#d4af37" stroke="#8a6d1f" stroke-width="2"/>
+        <path d="M53,74 V77" stroke="#8a6d1f" stroke-width="1.6"/>
+      </svg>
+      <div class="pet-name" id="pet-name">小狸 · Lv.1</div>
+      <div class="pet-exp"><div class="fill" id="pet-exp-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- 左下：丹方圆钮 -->
+  <button class="market recipe-round" id="btn-recipe" title="丹方管理：查看丹方与药材需求">
+    <svg class="round-ico" viewBox="0 0 24 24"><path d="M5,4 Q12,2 19,4 V17 Q12,19 5,17 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8,8 H16 M8,11 H16 M8,14 H13" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span class="market-word">丹方</span>
+    <span class="market-sub">研习</span>
+  </button>
+
+  <!-- 右侧：宗门任务/排行 + 采药 -->
+  <aside class="pill-rail">
+    <div class="task-panel">
+      <div class="hot-title">宗门任务<button class="mini-link" id="btn-sect-open">全部</button></div>
+      <div id="task-brief"></div>
+      <div class="hot-title" style="margin-top:8px">炼丹排行</div>
+      <ol class="hot-list" id="hot-list"></ol>
+    </div>
+    <button class="gather-btn" id="btn-gather">
+      <svg class="gather-ico" viewBox="0 0 24 24"><path d="M7,3 H17 L19,10 H5 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5,10 H19 L16,21 H8 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9,14 Q12,16 15,14 M9,17 Q12,19 15,17" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      采 药
+    </button>
+  </aside>
+</main>
+
+<!-- 弹窗 -->
+<div class="modal-mask" id="modal-mask" hidden>
+  <div class="modal">
+    <div class="modal-head"><span id="modal-title">商店</span><span class="rate-badge" id="rate-badge" hidden></span><button class="close-btn" id="modal-close">✕</button></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- 出丹公告 -->
+<div class="pill-toast" id="pill-toast" hidden>
+  <div class="toast-seal" id="toast-quality">上品</div>
+  <div class="toast-info">
+    <div class="toast-name" id="toast-name">聚气丹</div>
+    <div class="toast-sub" id="toast-sub">已收入囊中</div>
+  </div>
+</div>
+
+<!-- 执法堂斩立决（三心尽） -->
+<div id="exec-overlay" class="exec-overlay" hidden>
+  <div class="exec-box">
+    <div class="exec-seal">斩</div>
+    <div class="exec-title">执法堂 · 斩立决</div>
+    <div class="exec-text">累次怠慢宗门法旨，信任尽失——<br>执法堂长老拂袖而起：「丹师无状，斩立决！」<br>寒光落处，这一世的丹师生涯就此终结……</div>
+    <button class="fire-btn small" id="btn-reborn">转 世 重 修</button>
+  </div>
+</div>
+
+<!-- 玩法说明 -->
+<div class="modal-mask" id="help-mask" hidden>
+  <div class="modal">
+    <div class="modal-head"><span>玩法说明</span><button class="close-btn" id="help-close">✕</button></div>
+    <div class="modal-body help">
+      <p><b>灵历</b>：时间随操作耗时推进——采药耗时 1 时辰、开炉炼丹耗时更多，12 时辰为一日；跨日时宗门结算俸禄并发放新药材与委托。</p>
+      <p><b>采药</b>：点击右侧「采药」获取材料，购得「自动采药符」后每 6 秒自动获得材料，离线也持续采药（不推进灵历，上限 2 小时）。</p>
+      <p><b>炼丹</b>：三步开炉——点丹炉选丹方并投入药材，齐备后点「确定」；再到炉底选木柴，点「点火」开始熬制。炼成的丹药会升起悬于炉顶，点击丹药收取入仓库。丹分五等品阶与一至三品品级，炼制可能失败（药材尽毁）；炼成后心火渐起随机降成功率，跨日打坐恢复。火候极佳时可直接炼出二品/三品丹，概率见顶栏面板。</p>
+      <p><b>燃料</b>：点火消耗木柴——柴薪（8 石、采药偶尔拾得、宗门每日配发）为寻常火候；灵木（60 石）使成功率 +8%、高品级产出提升 50%，均在商店道具分类购买。</p>
+      <p><b>丹药品级</b>：炼成的丹均为一品；在仓库中一品×3 可凝练为二品，二品×2 凝练为三品。品级越高售价与幸运加成越高。</p>
+      <p><b>幸运值</b>：在仓库中服用丹药可提升幸运（品阶越高、品级越高加得越多），幸运会降低炼丹失败率并小幅提升高品阶概率；当前成功率见顶栏下方面板。</p>
+      <p><b>丹方</b>：丹方按阶分属凡/灵/圣/神四品，共十阶，同阶另有多种丹方可研习——一阶聚气丹起步，越高阶药材越珍稀、失败率越高、售价越可观。左下「丹方」圆钮可查全表；新丹方可去商店研习。服用不同丹药还可获得采药、炼丹、售价等限时增益。</p>
+      <p><b>集市</b>：将丹药卖出换灵石，行情随时波动。</p>
+      <p><b>宗门</b>：每日发放固定药材并张贴一件委托（用配发药材炼丹上交等），完成可得灵石与贡献；跨日结算——完成发全额俸禄并恢复一颗信任心，未完成扣除一半俸禄并失去一颗信任心，三心尽则执法堂斩立决（转世重修）。贡献累积晋升宗门地位。</p>
+      <p><b>丹宠小狸</b>：炼丹时涨经验，升级提升极品率；偶尔叼回药材，戳它会开心。</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/game.js?v=41"></script>
+</body>
+</html>
